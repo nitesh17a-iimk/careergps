@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career GPS | Solutions for the Next Generation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ==============================
+           GLOBAL DESIGN SYSTEM
+           ============================== */
+        :root {
+            --bg-color: #020617;
+            --bg-elevated: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --cta-gradient: linear-gradient(135deg, #0d9488 0%, #10b981 100%);
+            --cta-hover: linear-gradient(135deg, #0f766e 0%, #059669 100%);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --nav-height: 80px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+                              linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
+        p { color: var(--text-muted); }
+        a { text-decoration: none; color: inherit; cursor: pointer; }
+        ul { list-style: none; }
+        button, input, textarea { font-family: 'Inter', sans-serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+        /* Components */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(12px);
+            padding: 2.5rem;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(255,255,255,0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.8rem 1.8rem; border-radius: 50px; font-weight: 600;
+            cursor: pointer; border: none; transition: all 0.2s ease; font-size: 0.95rem;
+        }
+        .btn-primary {
+            background: var(--cta-gradient); color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+        .btn-primary:hover {
+            background: var(--cta-hover); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35); transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: var(--text-main);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+        .pill {
+            display: inline-flex; align-items: center; padding: 0.4rem 1.2rem;
+            border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+            background: rgba(16, 185, 129, 0.1); color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2); margin-bottom: 1.5rem;
+        }
+
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .page-section { display: none; padding: calc(var(--nav-height) + 4rem) 0 6rem; min-height: 100vh; animation: fadeIn 0.5s ease forwards; }
+        .page-section.active { display: block; }
+        .section-header { text-align: center; max-width: 700px; margin: 0 auto 4rem; }
+        .section-header h2 { font-size: 3.5rem; margin-bottom: 1rem; }
+        .section-header p { font-size: 1.1rem; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ==============================
+           NAVBAR
+           ============================== */
+        nav {
+            position: fixed; top: 0; width: 100%; height: var(--nav-height);
+            background: rgba(2, 6, 23, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border); z-index: 1000; display: flex; align-items: center;
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .logo { font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 8px;}
+        .logo-dot { width: 10px; height: 10px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+        .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+        .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--text-muted); transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--text-main); }
+
+        /* ==============================
+           HOME PAGE
+           ============================== */
+        .home-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; min-height: 75vh; }
+        .home-left h1 { font-size: 4.5rem; letter-spacing: -2px; margin-bottom: 1.5rem; line-height: 1.1; }
+        .home-left p { font-size: 1.25rem; margin-bottom: 2.5rem; max-width: 90%; color: #cbd5e1; }
+        .home-ctas { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;}
+        .stat-badge { font-size: 0.85rem; color: var(--text-muted); margin-left: 1rem; display: flex; align-items: center; gap: 6px;}
+
+        .home-right { position: relative; height: 500px; display: flex; justify-content: center; align-items: center; }
+        .radial-rings {
+            position: absolute; width: 450px; height: 450px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.03); box-shadow: inset 0 0 80px rgba(16, 185, 129, 0.05);
+        }
+        .radial-rings::before {
+            content: ''; position: absolute; top: 15%; left: 15%; right: 15%; bottom: 15%;
+            border-radius: 50%; border: 1px dashed rgba(255,255,255,0.1); animation: spin 40s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        .center-node {
+            position: relative; z-index: 2; width: 100px; height: 100px;
+            background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(16, 185, 129, 0.5);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.2), inset 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+        .center-node::after { content:''; width: 40px; height: 40px; background: var(--cta-gradient); border-radius: 50%; box-shadow: 0 0 20px #10b981; }
+        
+        .floating-card {
+            position: absolute; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--glass-border);
+            padding: 0.8rem 1.5rem; border-radius: 50px; backdrop-filter: blur(10px);
+            font-weight: 600; font-size: 0.9rem; animation: float 6s ease-in-out infinite; color: #e2e8f0;
+        }
+        .fc-1 { top: 8%; left: 15%; animation-delay: 0s; }
+        .fc-2 { top: 25%; right: 5%; animation-delay: 1.5s; }
+        .fc-3 { bottom: 25%; left: 5%; animation-delay: 3s; }
+        .fc-4 { bottom: 8%; right: 15%; animation-delay: 4.5s; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* ==============================
+           ABOUT PAGE
+           ============================== */
+        .tab-container { margin-bottom: 4rem; }
+        .tabs { display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
+        .tab-btn {
+            background: transparent; border: none; color: var(--text-muted); font-size: 1.1rem;
+            font-weight: 600; cursor: pointer; padding: 0.5rem 1rem; position: relative; transition: color 0.3s;
+        }
+        .tab-btn.active { color: var(--text-main); }
+        .tab-btn.active::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 2px;
+            background: var(--cta-gradient); border-radius: 2px;
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+
+        .team-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 2rem;}
+        .team-card { 
+            text-align: center; 
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .team-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.15); }
+        .team-avatar {
+            width: 120px; height: 120px; margin: 0 auto 1.2rem; border-radius: 50%;
+            border: 2px solid rgba(16, 185, 129, 0.4); object-fit: cover; background: var(--bg-elevated);
+        }
+        .team-role { color: #34d399; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 0.5rem 0; }
+        .team-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-top: 0.8rem; }
+
+        /* ==============================
+           SOLUTIONS PAGE
+           ============================== */
+        .solutions-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-bottom: 6rem; }
+        .sol-card { position: relative; overflow: hidden; }
+        .sol-icon { width: 48px; height: 48px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; color: #10b981; font-size: 1.5rem; font-weight: bold;}
+        .sol-output { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border); color: #34d399; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;}
+        
+        .users-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .users-grid ul { margin-top: 1.5rem; }
+        .users-grid li { margin-bottom: 1rem; padding-left: 1.8rem; position: relative; color: var(--text-muted); font-size: 0.95rem;}
+        .users-grid li::before { content: '✓'; position: absolute; left: 0; color: #10b981; font-weight: bold;}
+
+        /* ==============================
+           CAREER UNIVERSE (CORE FEATURE)
+           ============================== */
+        .universe-header { text-align: center; max-width: 700px; margin: 0 auto 2rem; }
+        
+        .search-wrapper { position: relative; max-width: 500px; margin: 0 auto 1.5rem; }
+        .search-wrapper input {
+            width: 100%; padding: 1.2rem 1.5rem; border-radius: 50px; background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--glass-border); color: white; outline: none; font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: border-color 0.3s;
+        }
+        .search-wrapper input:focus { border-color: #10b981; }
+        .search-results {
+            position: absolute; top: 110%; left: 0; width: 100%; background: #0f172a;
+            border: 1px solid var(--glass-border); border-radius: 16px; z-index: 100;
+            max-height: 300px; overflow-y: auto; display: none; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .search-result-item {
+            padding: 1rem 1.5rem; cursor: pointer; border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center; text-align: left;
+        }
+        .search-result-item:hover { background: rgba(255,255,255,0.05); }
+        .search-result-item span.domain { font-size: 0.75rem; background: rgba(255,255,255,0.1); padding: 0.2rem 0.5rem; border-radius: 4px; color: var(--text-muted); }
+
+        .universe-container { position: relative; width: 600px; height: 600px; margin: 0 auto; }
+        .u-rings { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(255,255,255,0.05); pointer-events: none;}
+        .u-ring-1 { width: 280px; height: 280px; }
+        .u-ring-2 { width: 480px; height: 480px; border-style: dashed; border-color: rgba(255,255,255,0.1);}
+        
+        .u-node {
+            position: absolute; transform: translate(-50%, -50%); border-radius: 50px;
+            background: #0f172a; border: 1px solid rgba(255,255,255,0.15); padding: 0.6rem 1.2rem;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; white-space: nowrap;
+            color: #f8fafc; /* FIXED: explicitly setting text color to white */
+        }
+        .u-node:hover { background: rgba(16, 185, 129, 0.1); border-color: #10b981; z-index: 10; transform: translate(-50%, -50%) scale(1.05); }
+        .u-center { top: 50%; left: 50%; background: var(--cta-gradient); color: white; padding: 1rem 2rem; font-size: 1.1rem; border: none; box-shadow: 0 0 30px rgba(16, 185, 129, 0.3); z-index: 5; }
+
+        .back-btn { position: absolute; top: 0; left: -100px; display: none; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-card { width: 100%; max-width: 550px; background: #0f172a; position: relative; padding: 3rem; border: 1px solid var(--glass-border); border-radius: var(--radius-lg); }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2rem; cursor: pointer; color: var(--text-muted); line-height: 1;}
+        .modal-close:hover { color: white; }
+        .modal-tag { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 4px; background: rgba(16, 185, 129, 0.1); color: #34d399; font-size: 0.8rem; margin-bottom: 1rem; font-weight: 600;}
+        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; padding: 1.5rem; background: rgba(0,0,0,0.2); border-radius: 12px;}
+        .m-item p { font-size: 0.8rem; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing: 0.05em;}
+        .m-item h4 { font-size: 1.1rem; color: var(--text-main); }
+        .modal-path { background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border: 1px solid var(--glass-border);}
+
+        /* ==============================
+           JOBS & CONTACT
+           ============================== */
+        .jobs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 4rem; align-items: center; }
+        .contact-info h3 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .c-item { margin-top: 2rem; }
+        .c-item p.lbl { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .c-item p.val { font-size: 1.2rem; font-weight: 600; color: white; }
+        
+        .contact-form { background: #0f172a; padding: 3rem; border-radius: var(--radius-lg); border: 1px solid var(--glass-border); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 500; color: var(--text-muted);}
+        .form-control { width: 100%; padding: 1rem; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; font-size: 1rem; outline: none; transition: border-color 0.2s;}
+        .form-control:focus { border-color: #10b981; }
+        textarea.form-control { resize: vertical; min-height: 120px; }
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="container nav-content">
+            <div class="logo"><div class="logo-dot"></div> Career GPS</div>
+            <ul class="nav-links">
+                <li><a onclick="navigate('home')" class="active" id="nav-home">Home</a></li>
+                <li><a onclick="navigate('about')" id="nav-about">About</a></li>
+                <li><a onclick="navigate('solutions')" id="nav-solutions">Solutions</a></li>
+                <li><a onclick="navigate('universe')" id="nav-universe">Career Universe</a></li>
+                <li><a onclick="navigate('jobs')" id="nav-jobs">Jobs</a></li>
+                <li><a onclick="navigate('contact')" id="nav-contact">Contact</a></li>
+                <li><button class="btn btn-primary" onclick="navigate('universe')">Start Career Check</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- HOME SECTION -->
+        <section id="home" class="page-section active">
+            <div class="container home-grid">
+                <div class="home-left">
+                    <div class="pill">Career intelligence for Indian students & families</div>
+                    <h1>Your future should not depend on guesswork.</h1>
+                    <p>Navigate the complex world of careers with data-driven insights. Discover your passion, validate your aptitude, and build an actionable roadmap for success.</p>
+                    <div class="home-ctas">
+                        <button class="btn btn-primary" onclick="navigate('universe')">Start immersive check</button>
+                        <button class="btn btn-secondary" onclick="navigate('solutions')">For schools</button>
+                        <span class="stat-badge">● Powered by 900+ Career DB</span>
+                    </div>
+                </div>
+                <div class="home-right">
+                    <div class="radial-rings"></div>
+                    <div class="center-node"></div>
+                    <div class="floating-card fc-1">Passion</div>
+                    <div class="floating-card fc-2">Aptitude</div>
+                    <div class="floating-card fc-3">Feasibility</div>
+                    <div class="floating-card fc-4">Demand</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
+        <section id="about" class="page-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>The intelligence layer for India's workforce</h2>
+                    <p>Democratizing career clarity for the next billion minds. Moving beyond generic advice to provide data-backed, personalized career pathways.</p>
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab('mission-tab', this)">Mission & Vision</button>
+                        <button class="tab-btn" onclick="switchTab('values-tab', this)">Core Values</button>
+                    </div>
+
+                    <div id="mission-tab" class="tab-content active">
+                        <div class="about-grid">
+                            <div class="glass-card">
+                                <h3 style="font-size:1.8rem; color:#10b981; margin-bottom:1rem;">Our Mission</h3>
+                                <p style="font-size:1.1rem; line-height:1.8;">To map every viable career path and make it accessible, understandable, and actionable for every student in India, regardless of their geography or background.</p>
+                            </div>
+                            <div class="glass-card">
+                                <h3 style="font-size:1.8rem; color:#3b82f6; margin-bottom:1rem;">Our Vision</h3>
+                                <p style="font-size:1.1rem; line-height:1.8;">A future where no student chooses a career based on incomplete information, peer pressure, or fear. A future driven by data, passion, and true capability.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="values-tab" class="tab-content">
+                        <div class="values-grid">
+                            <div class="glass-card">
+                                <h4>Data Integrity</h4>
+                                <p style="margin-top:0.8rem; font-size:0.95rem;">We rely on factual market demands, real education costs, and verified academic pathways, not outdated assumptions.</p>
+                            </div>
+                            <div class="glass-card">
+                                <h4>Empathetic Guidance</h4>
+                                <p style="margin-top:0.8rem; font-size:0.95rem;">Technology serves the human. Our insights are delivered in a way that reduces anxiety for both students and parents.</p>
+                            </div>
+                            <div class="glass-card">
+                                <h4>Absolute Transparency</h4>
+                                <p style="margin-top:0.8rem; font-size:0.95rem;">No hidden agendas with universities. If a career path is high-risk or oversaturated, our algorithms will clearly state it.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-header" style="margin-bottom: 3rem; margin-top: 6rem;">
+                    <h2>Meet the Founding Team</h2>
+                </div>
+                <div class="team-grid">
+                    <script>
+                        const team = [
+                            {name: "Ashima Salaria", title: "Chief Brand Officer", img: "Ashima.png", desc: "Branding, customer experience, and industrial relations expertise with the ability to position products effectively in the market."}, 
+                            {name: "Chetan Sharma", title: "Chief Planning Officer", img: "Chetan.png", desc: "Coordination and planning to align project activities and team efforts efficiently. Analytical support in monitoring execution."},
+                            {name: "Faiz Shaikh", title: "Chief Operating Officer", img: "Faiz.png", desc: "Operations management with a strong focus on process efficiency, financial analysis, budgeting, and cost control."}, 
+                            {name: "Joylin Fernandes", title: "Chief People Officer", img: "Joylin.png", desc: "Human resource management with a focus on team engagement, organizational effectiveness, and strategic leadership support driving end-to-end execution."},
+                            {name: "Nitesh Mehra", title: "Chief Technology Officer", img: "Nitesh.png", desc: "Bridging marketing, sales, and the technological landscape to build scalable, data-driven ecosystems."}, 
+                            {name: "Rishikjit Singh Saini", title: "Chief Strategy Officer", img: "Rishik.png", desc: "Market research and analytical capability to derive insights, aligning strategic decisions with execution."},
+                            {name: "Shivangi Malhotra", title: "Chief Sales Officer", img: "Shivangi.png", desc: "Spearheading sales, marketing, and global business development initiatives."}
+                        ];
+                        document.write(team.map(t => `
+                            <div class="team-card">
+                                <img src="${t.img}" class="team-avatar" alt="${t.name}">
+                                <h4>${t.name}</h4>
+                                <p class="team-role">${t.title}</p>
+                                <p class="team-desc">${t.desc}</p>
+                            </div>
+                        `).join(''));
+                    </script>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLUTIONS SECTION -->
+        <section id="solutions" class="page-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>The Career GPS Ecosystem</h2>
+                    <p>A comprehensive suite of SaaS tools designed for clarity at every stage.</p>
+                </div>
+
+                <div class="solutions-grid">
+                    <div class="glass-card sol-card">
+                        <div class="sol-icon">🎯</div>
+                        <h3 style="font-size:1.4rem;">Career Assessment Engine</h3>
+                        <p style="margin-top:0.8rem">Evaluates intrinsic motivations, academic baselines, and practical family constraints via a proprietary logic matrix to find true alignment.</p>
+                        <div class="sol-output">⟿ Unbiased aptitude profiling</div>
+                    </div>
+                    <div class="glass-card sol-card">
+                        <div class="sol-icon">🗺️</div>
+                        <h3 style="font-size:1.4rem;">Personalised GPS Report</h3>
+                        <p style="margin-top:0.8rem">A dynamic blueprint detailing step-by-step educational milestones, real-world cost projections, and viable backup plans.</p>
+                        <div class="sol-output">⟿ Actionable career roadmap</div>
+                    </div>
+                    <div class="glass-card sol-card">
+                        <div class="sol-icon">🌌</div>
+                        <h3 style="font-size:1.4rem;">Career Universe Explorer</h3>
+                        <p style="margin-top:0.8rem">An interactive graph mapping 900+ careers, showing hierarchical links between domains, industries, and specific niche roles.</p>
+                        <div class="sol-output">⟿ Macro-level industry awareness</div>
+                    </div>
+                    <div class="glass-card sol-card">
+                        <div class="sol-icon">📊</div>
+                        <h3 style="font-size:1.4rem;">School Intelligence Dashboard</h3>
+                        <p style="margin-top:0.8rem">Aggregated analytics for educational institutions to understand cohort trends, skill gaps, and optimize their counseling resources.</p>
+                        <div class="sol-output">⟿ Institutional strategy data</div>
+                    </div>
+                </div>
+
+                <div class="section-header" style="margin-bottom: 3rem;">
+                    <h2>Built for the entire ecosystem</h2>
+                </div>
+                <div class="users-grid">
+                    <div class="glass-card">
+                        <h3>For Students</h3>
+                        <ul>
+                            <li>Discover unknown career paths</li>
+                            <li>Match skills to market demands</li>
+                            <li>Understand daily work-life</li>
+                            <li>Build confidence in choices</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card">
+                        <h3>For Parents</h3>
+                        <ul>
+                            <li>Calculate real education costs</li>
+                            <li>Evaluate future job security</li>
+                            <li>Explore viable backup plans</li>
+                            <li>Align with child's true potential</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card">
+                        <h3>For Schools</h3>
+                        <ul>
+                            <li>Deploy at-scale counseling</li>
+                            <li>Track student career readiness</li>
+                            <li>Enhance institutional value</li>
+                            <li>Data-driven curriculum planning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CAREER UNIVERSE SECTION -->
+        <section id="universe" class="page-section">
+            <div class="container">
+                <div class="universe-header">
+                    <h2>Explore the Universe</h2>
+                    <p style="margin-bottom: 2rem;">Navigate our ontology of careers. Click to dive deeper into industries and specific roles, or search directly below.</p>
+                    
+                    <div class="search-wrapper">
+                        <input type="text" id="search-input" placeholder="Search 900+ careers (e.g., Data Scientist)...">
+                        <div class="search-results" id="search-results"></div>
+                    </div>
+
+                    <div class="filter-chips">
+                        <span class="pill" style="background:var(--glass-bg); color:var(--text-muted); border-color:var(--glass-border)">* Showing interactive sample of top 50 pathways from the full database.</span>
+                    </div>
+                </div>
+
+                <div class="universe-container" id="universe-canvas">
+                    <button class="btn btn-secondary back-btn" id="uni-back" onclick="goBackUniverse()">← Back</button>
+                    <div class="u-rings u-ring-1"></div>
+                    <div class="u-rings u-ring-2"></div>
+                    <!-- Nodes injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- JOBS SECTION -->
+        <section id="jobs" class="page-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Join us in building career intelligence</h2>
+                    <p>We are always looking for driven individuals to expand the map.</p>
+                </div>
+                <div class="jobs-grid">
+                    <div class="glass-card">
+                        <h3>Product Analyst</h3>
+                        <p style="margin: 1rem 0; font-size:0.9rem">Drive roadmap execution and analyze user telemetry to improve the assessment engine.</p>
+                        <button class="btn btn-secondary" style="width:100%">Apply Now</button>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Frontend Developer</h3>
+                        <p style="margin: 1rem 0; font-size:0.9rem">Craft pixel-perfect, highly interactive visual experiences like the Career Universe.</p>
+                        <button class="btn btn-secondary" style="width:100%">Apply Now</button>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Career Researcher</h3>
+                        <p style="margin: 1rem 0; font-size:0.9rem">Keep our 900+ node database updated with the latest market demands and academic paths.</p>
+                        <button class="btn btn-secondary" style="width:100%">Apply Now</button>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Data Analyst</h3>
+                        <p style="margin: 1rem 0; font-size:0.9rem">Build the predictive models that map student aptitudes to long-term success metrics.</p>
+                        <button class="btn btn-secondary" style="width:100%">Apply Now</button>
+                    </div>
+                    <div class="glass-card">
+                        <h3>Partnerships Manager</h3>
+                        <p style="margin: 1rem 0; font-size:0.9rem">Onboard high schools and universities onto the Career GPS institutional dashboard.</p>
+                        <button class="btn btn-secondary" style="width:100%">Apply Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="page-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Let’s build clarity at scale</h2>
+                    <p>Partner with us to bring Career GPS to your institution.</p>
+                </div>
+                
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3>Career GPS HQ</h3>
+                        <p style="font-size: 1.1rem">Building the future of education<br>from Mumbai, India.</p>
+                        
+                        <div class="c-item">
+                            <p class="lbl">Email Us</p>
+                            <p class="val">partnerships@careergps.demo</p>
+                        </div>
+                        <div class="c-item">
+                            <p class="lbl">Call Us</p>
+                            <p class="val">+91 98765 43210</p>
+                        </div>
+                        <div class="c-item">
+                            <p class="lbl">Available For</p>
+                            <p style="color:var(--text-main); font-weight:500; margin-top:0.5rem">
+                                ✓ School Partnerships<br>
+                                ✓ Parent Orientation Sessions<br>
+                                ✓ Bulk Student Reports
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="contact-form">
+                        <form onsubmit="event.preventDefault(); alert('Message sent to Career GPS team!');">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" class="form-control" placeholder="Dr. Jane Doe" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Work Email</label>
+                                <input type="email" class="form-control" placeholder="jane@school.edu" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Institution / Organization</label>
+                                <input type="text" class="form-control" placeholder="Delhi Public School">
+                            </div>
+                            <div class="form-group">
+                                <label>How can we help?</label>
+                                <textarea class="form-control" placeholder="We are interested in a pilot program for our 10th grade cohort..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width:100%">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ROLE MODAL -->
+    <div class="modal-overlay" id="role-modal">
+        <div class="glass-card modal-card">
+            <div class="modal-close" onclick="closeModal()">×</div>
+            <span class="modal-tag" id="m-domain">Domain</span>
+            <h2 id="m-title" style="margin-bottom:0.5rem">Role Title</h2>
+            <p id="m-desc" style="font-size: 0.9rem; margin-bottom: 1.5rem;">Short description of the role goes here to provide context.</p>
+            
+            <div class="modal-grid">
+                <div class="m-item"><p>Market Demand</p><h4 id="m-demand">High</h4></div>
+                <div class="m-item"><p>Est. Timeline</p><h4 id="m-time">3-5 Years</h4></div>
+                <div class="m-item"><p>Work-life</p><h4 id="m-work">Dynamic</h4></div>
+                <div class="m-item"><p>Key Skills</p><h4 id="m-skills">Analytical, Tech</h4></div>
+            </div>
+
+            <div class="modal-path">
+                <p style="text-transform:uppercase; font-size:0.8rem; letter-spacing:0.05em; color:var(--text-muted); margin-bottom:0.5rem;">Standard Education Pathway</p>
+                <p id="m-path" style="font-weight: 500;">B.Sc -> Master's -> Certification</p>
+            </div>
+
+            <div style="display:flex; gap:1rem">
+                <button class="btn btn-primary" style="flex:2" onclick="alert('This would open the personalized aptitude check for this role.')">Unlock my roadmap</button>
+                <button class="btn btn-secondary" style="flex:1">Compare</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* --- Navigation & Tabs Logic --- */
+        function navigate(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            const navItem = document.getElementById('nav-' + pageId);
+            if(navItem) navItem.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        /* --- Expanded Career Universe Data (Sample of ~50 for Demo) --- */
+        const universeData = {
+            name: "Career Universe",
+            children: [
+                {
+                    name: "Technology",
+                    children: [
+                        { name: "Software Eng", children: [
+                            { name: "Frontend Developer", type: "role", desc: "Builds user interfaces and web experiences.", demand: "Very High", time: "3-4 Years", work: "Flexible/Remote", path: "B.Tech CS / BCA -> React/Angular", skills: "JS, UI/UX, Logic" },
+                            { name: "Backend Engineer", type: "role", desc: "Architects server logic and databases.", demand: "Very High", time: "4 Years", work: "Intense", path: "B.Tech CS / MCA", skills: "Python, Java, SQL" },
+                            { name: "Cloud Architect", type: "role", desc: "Designs secure cloud infrastructure.", demand: "Explosive", time: "5-6 Years", work: "Corporate", path: "B.Tech -> AWS/Azure Certs", skills: "Networking, DevOps" }
+                        ]},
+                        { name: "Data & AI", children: [
+                            { name: "AI/ML Engineer", type: "role", desc: "Builds predictive models and neural networks.", demand: "Explosive", time: "4-6 Years", work: "Research-driven", path: "B.Tech -> MS in AI", skills: "Math, Python, Deep Learning" },
+                            { name: "Data Analyst", type: "role", desc: "Translates data into business insights.", demand: "High", time: "2-4 Years", work: "Balanced", path: "B.Sc Stat/Math -> SQL/Tableau", skills: "SQL, Stats, Viz" },
+                            { name: "Data Engineer", type: "role", desc: "Builds data pipelines and warehouses.", demand: "Very High", time: "4 Years", work: "Structured", path: "B.Tech CS -> Big Data Tools", skills: "Hadoop, Spark, ETL" }
+                        ]},
+                        { name: "Cybersecurity", children: [
+                            { name: "Ethical Hacker", type: "role", desc: "Penetration testing to secure systems.", demand: "High", time: "3-4 Years", work: "Dynamic", path: "B.Tech -> CEH Certification", skills: "Networking, Scripting" },
+                            { name: "Security Analyst", type: "role", desc: "Monitors networks for security breaches.", demand: "High", time: "3-5 Years", work: "Shift-based", path: "B.Sc IT -> CompTIA Sec+", skills: "Risk Mgmt, Forensics" }
+                        ]}
+                    ]
+                },
+                {
+                    name: "Business & Com",
+                    children: [
+                        { name: "Finance", children: [
+                            { name: "Investment Banker", type: "role", desc: "Raises capital and advises on M&A.", demand: "High", time: "4-6 Years", work: "High Stress (80h/w)", path: "B.Com/BBA -> Top Tier MBA", skills: "Financial Modeling, Valuation" },
+                            { name: "Chartered Accountant", type: "role", desc: "Manages auditing, taxation, and accounting.", demand: "Stable", time: "4-5 Years", work: "Seasonal Intense", path: "B.Com -> CA Foundation/Final", skills: "Auditing, Tax Law" },
+                            { name: "Actuary", type: "role", desc: "Assesses financial risks using math.", demand: "Medium/Niche", time: "5-7 Years", work: "Balanced", path: "B.Sc Math/Stat -> Actuarial Exams", skills: "Probability, Economics" }
+                        ]},
+                        { name: "Marketing", children: [
+                            { name: "Performance Marketer", type: "role", desc: "Runs ROI-driven ad campaigns.", demand: "Very High", time: "2-3 Years", work: "Dynamic", path: "Any Degree -> Digital Certs", skills: "SEO, SEM, Data Analysis" },
+                            { name: "Brand Manager", type: "role", desc: "Controls public perception of a product.", demand: "Medium", time: "4-6 Years", work: "Collaborative", path: "BBA -> MBA Marketing", skills: "Strategy, Consumer Psych" }
+                        ]},
+                        { name: "Management", children: [
+                            { name: "Product Manager", type: "role", desc: "Sits between tech, business, and design.", demand: "Very High", time: "4-6 Years", work: "Meeting-heavy", path: "B.Tech/BBA -> MBA", skills: "Strategy, Empathy, Tech-fluent" },
+                            { name: "Supply Chain Mgr", type: "role", desc: "Optimizes logistics and operations.", demand: "High", time: "4-5 Years", work: "Field/Office", path: "B.Tech Mech/BBA -> MBA Ops", skills: "Logistics, Negotiation" }
+                        ]}
+                    ]
+                },
+                {
+                    name: "Healthcare",
+                    children: [
+                        { name: "Medicine", children: [
+                            { name: "Surgeon", type: "role", desc: "Performs operative procedures.", demand: "High", time: "10-12 Years", work: "Extremely Demanding", path: "PCB -> NEET -> MBBS -> MS", skills: "Precision, Stamina, Empathy" },
+                            { name: "General Physician", type: "role", desc: "Primary care diagnosis and treatment.", demand: "Very High", time: "6-8 Years", work: "Clinic hours", path: "PCB -> NEET -> MBBS -> MD", skills: "Diagnostics, Patient Care" }
+                        ]},
+                        { name: "Allied Health", children: [
+                            { name: "Clinical Psychologist", type: "role", desc: "Therapy and mental health treatment.", demand: "Growing Fast", time: "5-7 Years", work: "Emotionally heavy", path: "BA Psych -> MA -> M.Phil", skills: "Active Listening, Ethics" },
+                            { name: "Physiotherapist", type: "role", desc: "Rehabilitates physical injuries.", demand: "High", time: "4-5 Years", work: "Physical", path: "PCB -> BPT", skills: "Anatomy, Communication" }
+                        ]},
+                        { name: "Health Tech", children: [
+                            { name: "Bioinformatician", type: "role", desc: "Analyzes biological data like DNA.", demand: "Niche Growth", time: "4-6 Years", work: "Lab/Computer", path: "B.Tech Biotech -> MS Bioinformatics", skills: "Genomics, Data Science" }
+                        ]}
+                    ]
+                },
+                {
+                    name: "Creative & Arts",
+                    children: [
+                        { name: "Design", children: [
+                            { name: "UX/UI Designer", type: "role", desc: "Designs app interfaces and user flows.", demand: "High", time: "3-4 Years", work: "Flexible", path: "B.Des / Portfolio", skills: "Figma, User Research, Empathy" },
+                            { name: "Industrial Designer", type: "role", desc: "Designs physical products (cars, electronics).", demand: "Medium", time: "4 Years", work: "Studio", path: "B.Des Product Design", skills: "CAD, Prototyping, Materials" }
+                        ]},
+                        { name: "Media", children: [
+                            { name: "Content Strategist", type: "role", desc: "Plans digital media and editorial calendars.", demand: "High", time: "3 Years", work: "Dynamic", path: "BA Comm / Journalism", skills: "Writing, SEO, Trend Analysis" },
+                            { name: "Filmmaker", type: "role", desc: "Directs and produces video content.", demand: "Competitive", time: "3-5 Years", work: "Irregular/Project-based", path: "BA Film Studies / Portfolio", skills: "Storytelling, Editing" }
+                        ]}
+                    ]
+                },
+                {
+                    name: "Law & Gov",
+                    children: [
+                        { name: "Legal Practice", children: [
+                            { name: "Corporate Lawyer", type: "role", desc: "Handles M&A, contracts, and corporate law.", demand: "High", time: "5 Years", work: "High Stress", path: "CLAT -> BA/BBA LLB", skills: "Drafting, Negotiation" },
+                            { name: "Litigation Lawyer", type: "role", desc: "Argues cases in courts.", demand: "Stable", time: "5-7 Years", work: "Court hours", path: "BA LLB -> State Bar", skills: "Oratory, Legal Research" }
+                        ]},
+                        { name: "Public Sector", children: [
+                            { name: "Civil Servant (IAS)", type: "role", desc: "Administers government policies.", demand: "Very High", time: "1-3 Yrs Prep", work: "Public Duty", path: "Any Degree -> UPSC Exam", skills: "Admin, Policy, Leadership" },
+                            { name: "Public Policy Analyst", type: "role", desc: "Evaluates impact of government laws.", demand: "Growing", time: "4-6 Years", work: "Research", path: "BA Economics/Pol Sci -> MPP", skills: "Economics, Data Analysis" }
+                        ]}
+                    ]
+                }
+            ]
+        };
+
+        /* --- Search Logic --- */
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        
+        // Flatten tree for easy searching
+        let flatRoles = [];
+        function flattenTree(node, domainPath = "") {
+            if(node.type === "role") {
+                flatRoles.push({ ...node, domain: domainPath });
+            } else if (node.children) {
+                node.children.forEach(child => flattenTree(child, domainPath ? `${domainPath} > ${node.name}` : node.name));
+            }
+        }
+        flattenTree(universeData);
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            searchResults.innerHTML = '';
+            
+            if(!query) {
+                searchResults.style.display = 'none';
+                renderUniverse(universeData); // Reset to center
+                return;
+            }
+
+            const matches = flatRoles.filter(role => role.name.toLowerCase().includes(query) || role.skills.toLowerCase().includes(query));
+            
+            if(matches.length > 0) {
+                searchResults.style.display = 'block';
+                matches.slice(0, 6).forEach(match => {
+                    const div = document.createElement('div');
+                    div.className = 'search-result-item';
+                    div.innerHTML = `<div><strong>${match.name}</strong><br><span style="font-size:0.8rem; color:var(--text-muted)">Skills: ${match.skills}</span></div> <span class="domain">${match.domain}</span>`;
+                    div.onclick = () => {
+                        openModal(match, match.domain);
+                        searchResults.style.display = 'none';
+                        searchInput.value = '';
+                    };
+                    searchResults.appendChild(div);
+                });
+            } else {
+                searchResults.style.display = 'block';
+                searchResults.innerHTML = '<div class="search-result-item" style="color:var(--text-muted)">No careers found. Try another term.</div>';
+            }
+        });
+
+        // Hide search results if clicked outside
+        document.addEventListener('click', (e) => {
+            if(!e.target.closest('.search-wrapper')) searchResults.style.display = 'none';
+        });
+
+        /* --- Universe Canvas Rendering --- */
+        const canvas = document.getElementById('universe-canvas');
+        const backBtn = document.getElementById('uni-back');
+        let historyStack = [];
+        let currentNode = universeData;
+
+        function renderUniverse(node) {
+            // Clear nodes
+            canvas.querySelectorAll('.u-node').forEach(n => n.remove());
+            
+            // Handle Back Button
+            if (historyStack.length > 0) {
+                backBtn.style.display = 'block';
+            } else {
+                backBtn.style.display = 'none';
+            }
+
+            // Center Node
+            const centerEl = document.createElement('button');
+            centerEl.className = 'u-node u-center';
+            centerEl.innerText = node.name;
+            canvas.appendChild(centerEl);
+
+            if (!node.children) return;
+
+            // Orbit Logic
+            const total = node.children.length;
+            const radius = total > 4 ? 240 : 140; 
+            const cx = 300; 
+            const cy = 300; 
+
+            node.children.forEach((child, index) => {
+                const angle = (index / total) * (2 * Math.PI) - (Math.PI / 2); // Start top
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+
+                const childEl = document.createElement('button');
+                childEl.className = 'u-node';
+                childEl.innerText = child.name;
+                childEl.style.left = `${x}px`;
+                childEl.style.top = `${y}px`;
+                
+                childEl.onclick = () => {
+                    if (child.type === "role") {
+                        openModal(child, node.name);
+                    } else {
+                        historyStack.push(node);
+                        currentNode = child;
+                        renderUniverse(child);
+                    }
+                };
+                canvas.appendChild(childEl);
+            });
+        }
+
+        function goBackUniverse() {
+            if (historyStack.length > 0) {
+                currentNode = historyStack.pop();
+                renderUniverse(currentNode);
+            }
+        }
+
+        /* --- Modal Logic --- */
+        const modal = document.getElementById('role-modal');
+        function openModal(roleData, parentDomain) {
+            document.getElementById('m-title').innerText = roleData.name;
+            document.getElementById('m-domain').innerText = parentDomain.replace("Career Universe > ", "");
+            document.getElementById('m-desc').innerText = roleData.desc || 'A specialized career path.';
+            document.getElementById('m-demand').innerText = roleData.demand || 'N/A';
+            document.getElementById('m-time').innerText = roleData.time || 'N/A';
+            document.getElementById('m-work').innerText = roleData.work || 'N/A';
+            document.getElementById('m-skills').innerText = roleData.skills || 'N/A';
+            document.getElementById('m-path').innerText = roleData.path || 'N/A';
+            
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) closeModal();
+        });
+
+        // Initialize
+        renderUniverse(universeData);
+
+    </script>
+</body>
+</html>
